@@ -1,6 +1,7 @@
 import os
 import json
 from googleapiclient.discovery import build
+import pprint
 """
 Файл .env в корне проекта  — это текстовый файл, содержащий пары “ключ/значение” 
 всех переменных среды. Необходимо установить библиотеку python-dotenv. load_dotenv() 
@@ -39,4 +40,6 @@ class Youtube_analitica:
 
 item = Youtube_analitica(channel_id, "SKYPROAPIKEY")
 
-print(item.print_info())
+# print(item.print_info())
+
+pprint.pprint(item.print_info())
