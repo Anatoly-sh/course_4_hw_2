@@ -16,17 +16,10 @@ from dotenv import load_dotenv
 # youtube = build('youtube', 'v3', developerKey=api_key)
 
 channel_id = 'UCMCgOm8GZkHp8zJ6l7_hIuA'  # вДудь
+load_dotenv()
 
 
-# channel_id = 'UC1eFXmJNkjITxPFWTy6RsWg'       # Редакция
-# channel_id = 'UClMe70teNK5LpBE3Im_JRSQ'  # Знай ТВ
-
-# channel = youtube.channels().list(id=channel_id, part='snippet,statistics').execute()
-
-# print(json.dumps(dict_to_print, indent=2, ensure_ascii=False))
-class YoutubeAnalytic:
-    load_dotenv()
-
+class Channel:
     def __init__(self, id_channel, api_key):
         self.api_key = os.getenv(api_key)  # ключ из .env
         self.__id_channel = id_channel
@@ -44,7 +37,7 @@ class YoutubeAnalytic:
 
     @classmethod
     def get_service(cls):
-        service = build('youtube', 'v3', developerKey=os.environ.get('YOUTUBE_KEY'))
+        service = build('youtube', 'v3', developerKey=os.getenv('SKYPROAPIKEY'))
         return service
 
     def json_file(self, data, filename='channel.json'):
@@ -59,6 +52,43 @@ class YoutubeAnalytic:
         print(json.dumps(self.channel_info, indent=2, ensure_ascii=False))
 
 
-item = YoutubeAnalytic(channel_id, "SKYPROAPIKEY")
+"""    def save_json_in_file(self, path):
+        метод сохраняет все атрибуты объекта channel, кроме json в файл по адресу path
+        text = "["
+        for dic in self.__dict__:
+            if dic != 'json':
+                text +=  "{'" + str(dic) + "':'" +str(self.__dict__[dic]) + "'}, \n"
+        json_text = text[:-3] + "]"
+        with open(path, "w", encoding="UTF-8") as file:
+            file.write(str(json_text))"""
+
+
+"""def __repr__(self):
+        метод возвращает представление объекта channel
+        text = ""
+        for dic in self.__dict__:
+            text += dic + "=" + str(self.__dict__[dic]) + ", "
+        return text[:-2]"""
+
+
+item = Channel(channel_id, "SKYPROAPIKEY")
 
 item.print_info()
+
+vdud = Channel('UCMCgOm8GZkHp8zJ6l7_hIuA', "SKYPROAPIKEY")
+
+# получаем значения атрибутов
+print(vdud.title)
+# вДудь
+print(vdud.video_count)
+# 163
+print(vdud.url)
+# https://www.youtube.com/channel/UCMCgOm8GZkHp8zJ6l7_hIuA
+
+# менять не можем
+# vdud.channel_id = 'Новое название'
+# AttributeError: property 'channel_id' of 'Channel' object has no setter
+
+# можем получить объект для работы с API вне класса
+print(Channel.get_service())
+# <googleapiclient.discovery.Resource object at 0x000002B1E54F9750>
