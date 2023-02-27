@@ -24,6 +24,10 @@ class Channel:
         self.video_count = self.channel_info['items'][0]['statistics']['videoCount']
         self.view_count = self.channel_info['items'][0]['statistics']['viewCount']
 
+    @property
+    def channel_id(self):
+        return self.__id_channel
+
     @classmethod
     def get_service(cls):
         """метод класса, который возвращает объект для работы с API ютуба"""
@@ -41,3 +45,4 @@ class Channel:
         см. методы build() , channels() , list() , execute()"""
         self.info = json.dumps(self.channel_info, indent=4)
         return self.info
+
