@@ -1,6 +1,7 @@
 import os
 import json
 from googleapiclient.discovery import build
+import pprint
 import isodate
 
 """
@@ -11,10 +12,13 @@ import isodate
 from dotenv import load_dotenv
 
 channel_id = 'UCMCgOm8GZkHp8zJ6l7_hIuA'  # вДудь
+# id_video
 load_dotenv()
 
 
 class Channel:
+    """Класс Channel для работы с каналами youtube.
+        Экземпляр класса Channel инициализируется с помощью id канала"""
     def __init__(self, channel_id):
         self.__id_channel = channel_id
         # определенный ютубом метод доступа к информации о канале
@@ -66,12 +70,49 @@ class Channel:
         return int(self.subscriber_count) < int(other.subscriber_count)
 
 
+class Video:
+    """
+    Класс Video для работы с видео youtube.
+    Атрибуты:
+    - api_key - API ключ для доступа к сервису youtube.
+    - get_service() - метод класса для получения объекта build,
+       через который осуществляется доступ к сервису youtube
+    - set_api_key() -метод класса для получения значения API ключа из config.py
+    - __init__()- инициализация экземляра класса
+    - get_video_statistic() - метод получения статистики видео по его id
+    - __repr__() - метод возвращает представление объекта Video
+    - __str__() - метод возвращает строку для печати для объекта Video"""
+
+    def __init__(self, id_video):
+        self.id_video = id_video
+        # определенный ютубом метод доступа к информации о video
+        self.video_data = self.get_service().videos().list(id=self.id_video, part='snippet, statistics').execute()
+        self.video_info = json.dumps(self.video_data, indent=4)
+        self.video_name = self.video_data['items'][0]['snippet']['title']
+        self.video_view_count = self.video_data['items'][0]['statistics']['viewCount']
+        self.video_like_count = self.video_data['items'][0]['statistics']['likeCount']
+
+    @classmethod
+    def get_service(cls):
+        """метод класса, который возвращает объект для работы с API ютуба"""
+        api_key: str = os.getenv('SKYPROAPIKEY')
+        youtube = build('youtube', 'v3', developerKey=api_key)
+        return youtube
+
+
 if __name__ == '__main__':
-    vdud = Channel('UCMCgOm8GZkHp8zJ6l7_hIuA')
+    video1 = Video('9lO06Zxhu88')  # '9lO06Zxhu88' - это id видео из ютуб
+    print(video1.video_info)
+    print(video1.video_name)
+    print(video1.video_view_count)
+    print(video1.video_like_count)
+    # print(json.dumps(video1.video_data, indent=4))
+
+    """vdud = Channel('UCMCgOm8GZkHp8zJ6l7_hIuA')
     playlists = vdud.print_info().playlists().list(channelId=channel_id,
                                                    part='contentDetails,snippet',
                                                    maxResults=50,
-                                                   ).execute()
+                                                   ).execute()"""
 # Задание 1
 #     vdud = Channel('UCMCgOm8GZkHp8zJ6l7_hIuA')
 #     print(vdud.print_info())
