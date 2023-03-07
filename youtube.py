@@ -3,7 +3,6 @@ import json
 from googleapiclient.discovery import build
 import isodate
 
-
 """
 Файл .env в корне проекта  — это текстовый файл, содержащий пары “ключ/значение” 
 всех переменных среды. Необходимо установить библиотеку python-dotenv. load_dotenv() 
@@ -67,13 +66,16 @@ class Channel:
 
 
 if __name__ == '__main__':
-
-
-# Задание 1
     vdud = Channel('UCMCgOm8GZkHp8zJ6l7_hIuA')
-    print(vdud.print_info())
-
-    print(Channel.get_service())        # <googleapiclient.discovery.Resource object at 0x106575fd0>
+    playlists = vdud.print_info().playlists().list(channelId=channel_id,
+                                                   part='contentDetails,snippet',
+                                                   maxResults=50,
+                                                   ).execute()
+# Задание 1
+#     vdud = Channel('UCMCgOm8GZkHp8zJ6l7_hIuA')
+#     print(vdud.print_info())
+#
+#     print(Channel.get_service())        # <googleapiclient.discovery.Resource object at 0x106575fd0>
 
 # Задание 2
 #     vdud = Channel('UCMCgOm8GZkHp8zJ6l7_hIuA')
@@ -98,13 +100,13 @@ if __name__ == '__main__':
 # vdud.to_json('vdud.json')
 
 # Задание 3
-    # ch1 = Channel('UC1eFXmJNkjITxPFWTy6RsWg')   # Редакция
-    # ch2 = Channel(channel_id)
-    # print(ch1)
-    # print(ch2)
-    # print(ch1 + ch2)
-    # print(ch1 > ch2)
-    # print(ch1 < ch2)
+# ch1 = Channel('UC1eFXmJNkjITxPFWTy6RsWg')   # Редакция
+# ch2 = Channel(channel_id)
+# print(ch1)
+# print(ch2)
+# print(ch1 + ch2)
+# print(ch1 > ch2)
+# print(ch1 < ch2)
 
 
 '''class Video:
@@ -214,9 +216,7 @@ class PLVideo(Video):
         return f"{self.video_title} ({self.playlist_name})"
 '''
 
-
 #  это  в конце
 # video_id = '9lO06Zxhu88'
 # video_response = youtube.videos().list(part='snippet,statistics', id=video_id).execute()
 # printj(video_response)
-
