@@ -17,17 +17,18 @@ load_dotenv()
 class Channel:
     def __init__(self, channel_id):
         self.__id_channel = channel_id
+        # определенный ютубом метод доступа к информации о канале
         self.channel_info = self.get_service().channels().list(id=channel_id, part='snippet, statistics').execute()
+        # все остальное из channel_info (кроме url):
         self.title = self.channel_info['items'][0]['snippet']['title']
         self.description = self.channel_info['items'][0]['snippet']['description']
-        self.subscribers = self.channel_info['items'][0]['statistics']['subscriberCount']
-        self.url = 'https://www.youtube.com/' + self.__id_channel
+        self.url = 'https://www.youtube.com/channel/' + self.__id_channel
         self.subscriber_count = self.channel_info['items'][0]['statistics']['subscriberCount']
         self.video_count = self.channel_info['items'][0]['statistics']['videoCount']
         self.view_count = self.channel_info['items'][0]['statistics']['viewCount']
 
     def __str__(self):
-        '''Метод возврата названия канала'''
+        """Метод возврата названия канала"""
         return f'Channel: {self.title}'
 
     @property
@@ -49,20 +50,20 @@ class Channel:
     def print_info(self):
         """Статистика канала
         см. методы build() , channels() , list() , execute()"""
-        self.info = json.dumps(self.channel_info, indent=4)
-        return self.info
+        pr_info = json.dumps(self.channel_info, indent=4)
+        return pr_info
 
     def __add__(self, other):
-        '''Метод сложения количества подписчиков'''
-        return int(self.subscribers) + int(other.subscribers)
+        """Метод сложения количества подписчиков"""
+        return int(self.subscriber_count) + int(other.subscriber_count)
 
     def __gt__(self, other):
-        '''Метод сравнения количества подписчиков >'''
-        return int(self.subscribers) > int(other.subscribers)
+        """Метод сравнения количества подписчиков >"""
+        return int(self.subscriber_count) > int(other.subscriber_count)
 
     def __lt__(self, other):
-        '''Метод сравнения количества подписчиков <'''
-        return int(self.subscribers) < int(other.subscribers)
+        """Метод сравнения количества подписчиков <"""
+        return int(self.subscriber_count) < int(other.subscriber_count)
 
 
 if __name__ == '__main__':
