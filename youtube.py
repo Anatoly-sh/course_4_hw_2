@@ -102,7 +102,7 @@ class Video:
 
 if __name__ == '__main__':
     video1 = Video('9lO06Zxhu88')  # '9lO06Zxhu88' - это id видео из ютуб
-    print(video1.video_info)
+    # print(video1.video_info)
     print(video1.video_name)
     print(video1.video_view_count)
     print(video1.video_like_count)
