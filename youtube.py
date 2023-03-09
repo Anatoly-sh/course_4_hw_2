@@ -111,7 +111,7 @@ class PLVideo(Video):
         self.id_playlist = id_playlist
         self.playlist_data = self.get_service().playlists()\
             .list(id=self.id_playlist, part='snippet, contentDetails').execute()
-        self.playlist_info = json.dumps(self.playlist_data, indent=4)
+        # self.playlist_info = json.dumps(self.playlist_data, indent=4)
         # требуемый дополнительный атрибут: название плейлиста
         self.playlist_name = self.playlist_data['items'][0]['snippet']['title']
 
