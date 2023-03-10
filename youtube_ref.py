@@ -12,18 +12,11 @@ import isodate
 from dotenv import load_dotenv
 load_dotenv()
 
-# channel_id = 'UCMCgOm8GZkHp8zJ6l7_hIuA'  # вДудь
-
 
 class Main:
     """Класс для работы с ютубом"""
     api_key: str = os.getenv('SKYPROAPIKEY')
     youtube = build('youtube', 'v3', developerKey=api_key)
-
-    # def __new__(cls, *args, **kwargs):
-    #     if cls is Main:
-    #         raise ValueError(f'Нельзя создавать экземпляр класса {__class__.__name__}.')
-    #     return super().__new__(cls)
 
     def __init__(self):
         pass
@@ -71,7 +64,7 @@ class Main:
                                                            part='contentDetails',
                                                            maxResults=50).execute()
 
-        video_ids: list[str] = [video['contentDetails']['videoId'] for video in playlist_videos['items']]   #########
+        video_ids: list[str] = [video['contentDetails']['videoId'] for video in playlist_videos['items']]
         return video_ids
 
     @classmethod
@@ -121,7 +114,7 @@ class Channel(Main):
     @property
     def channel_id(self) -> str:
         """Возвращает id"""
-        return self.__channel_id
+        return self.__id_channel
 
     @property
     def title(self) -> str:
@@ -153,10 +146,10 @@ class Channel(Main):
         """Возвращает количество просмотров"""
         return self.__views_count
 
-    @property               ############################# зачем проперти?
+    @property
     def channel(self) -> dict:
         """Возвращает информацию о канале"""
-        return self._get_channel(channel_id=self.__channel_id)
+        return self._get_channel(channel_id=self.__id_channel)
 
     def print_info(self) -> json:
         """Вывод информации о канале на экран"""
@@ -264,16 +257,6 @@ class PLVideo(Video, Main):
         """Вывод информации о плейлисте на экран"""
         print(super().dict_to_json(data=self.playlist))
 
-    # def check_video_in_playlist(self) -> str:
-    #     """Получение информации о нахождении видео в плейлисте"""
-    #     playlist = self.playlist_channel
-    #     music = []
-    #     for item in playlist['items']:
-    #         music.append(item['snippet']['title'])
-    #     if self.playlist_name in music:
-    #         return f"Видео '{self.title}' есть в плейлисте '{self.playlist_name}'"
-    #     return f"Видео '{self.title}' нет в плейлисте '{self.playlist_name}'"
-
 
 class PlayList(Main):
 
@@ -325,7 +308,6 @@ class PlayList(Main):
             iso_8601_duration = video['contentDetails']['duration']
             duration = isodate.parse_duration(iso_8601_duration)
             total += duration
-
         return total
 
     def show_best_video(self):
@@ -338,9 +320,41 @@ class PlayList(Main):
             if likes > best_likes:
                 best_likes = likes
                 best_id = video['id']
-        return f"Ссылка на лучшее видео в плейлисте:\n" \
-               f"https://youtu.be/{best_id}"
+        return f"Ссылка на самое популярное видео в плейлисте: https://youtu.be/{best_id}"
 
 
-pl = PlayList('PLguYHBi01DWr4bRWc4uaguASmo7lW4GCb')
-print(pl.playlist)
+if __name__ == '__main__':
+
+    # 1
+    # vdud = Channel('UCMCgOm8GZkHp8zJ6l7_hIuA')
+    # vdud.print_info()
+    # 2
+    # vdud = Channel('UCMCgOm8GZkHp8zJ6l7_hIuA')
+    # print(vdud.title)
+    # print(vdud.video_count)
+    # print(vdud.url)
+    # менять не можем
+    # vdud.channel_id = 'Новое название'
+    # print(Channel.get_service())
+    # vdud.to_json('vdud.json')
+    # 3
+    # ch1 = Channel('UCMCgOm8GZkHp8zJ6l7_hIuA')
+    # ch2 = Channel('UC1eFXmJNkjITxPFWTy6RsWg')
+    # print(ch1)
+    # print(ch2)
+    # print(ch1 > ch2)
+    # print(ch1 + ch2)
+    # 4
+    # video1 = Video('9lO06Zxhu88')
+    # video2 = PLVideo('BBotskuyw_M', 'PL7Ntiz7eTKwrqmApjln9u4ItzhDLRtPuD')
+    # print(video1)
+    # print(video2)
+    # 5
+    # pl = PlayList('PLguYHBi01DWr4bRWc4uaguASmo7lW4GCb')
+    # print(pl.title)
+    # print(pl.url)
+    # duration = pl.total_duration
+    # print(duration)
+    # print(type(duration))
+    # print(duration.total_seconds())
+    # print(pl.show_best_video())
