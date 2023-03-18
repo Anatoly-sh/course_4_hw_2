@@ -4,6 +4,7 @@ from googleapiclient.discovery import build
 import datetime
 import isodate
 
+
 """
 Файл .env в корне проекта  — это текстовый файл, содержащий пары “ключ/значение” 
 всех переменных среды. Необходимо установить библиотеку python-dotenv. load_dotenv() 
@@ -174,13 +175,22 @@ class Video(Main):
         - количество лайков (like_count)"""
     def __init__(self, video_id):
         super().__init__()
-        self.__video_id = video_id
-        self.__title = self.info_video['items'][0]['snippet']['localized']['title']
-        self.__view_count = self.info_video['items'][0]['statistics']['viewCount']
-        self.__like_count = self.info_video['items'][0]['statistics']['likeCount']
+        try:
+            self.__video_id = video_id
+            if self.info_video['items']:
+                self.__title = self.info_video['items'][0]['snippet']['localized']['title']
+                self.__view_count = self.info_video['items'][0]['statistics']['viewCount']
+                self.__like_count = self.info_video['items'][0]['statistics']['likeCount']
+            else:
+                raise YoutubeApiError
+        except YoutubeApiError:
+            self.__title = None
+            self.__view_count = None
+            self.__like_count = None
+
 
     def __str__(self):
-        return self.__title
+        return f"Видео: {self.__title}"
 
     @property
     def info_video(self) -> dict:
@@ -226,7 +236,7 @@ class PLVideo(Video, Main):
         self.__playlist_name = self.playlist['items'][0]['snippet']['title']
 
     def __str__(self):
-        return f"{super().__str__()} ({self.__playlist_name})"
+        return f"{super().__str__()} (Пл.лист: {self.__playlist_name})"
 
     @property
     def playlist_id(self) -> str:
@@ -321,6 +331,16 @@ class PlayList(Main):
                 best_likes = likes
                 best_id = video['id']
         return f"Ссылка на самое популярное видео в плейлисте: https://youtu.be/{best_id}"
+
+
+class YoutubeApiError(Exception):
+    """Класс-исключение для ошибок, связанных с ютубом"""
+
+    def __init__(self, *args):
+        self.message = args[0] if args else "Неизвестная ошибка"
+
+    def __str__(self):
+        return self.message
 
 
 if __name__ == '__main__':
